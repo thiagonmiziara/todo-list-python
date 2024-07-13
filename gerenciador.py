@@ -6,6 +6,9 @@ def add_task(tasks, task):
 
 def view_task(tasks):
   print("\nLista de tarefas: ")
+  if not tasks:
+    print("Nenhuma tarefa adicionada ainda.")
+    return
   for index,task in enumerate(tasks, start=1):
     status = "✓" if task["completed"] else "" 
     task = task["task"]
@@ -13,19 +16,26 @@ def view_task(tasks):
    
     
 def update_task(tasks,index,new_task):
-  adjust_index = int(index) - 1
-  if adjust_index >= 0 and adjust_index < len(tasks):
-    tasks[adjust_index]["task"] = new_task
-    print(f"Tarefa {index} atualizada para {new_task}")
-  else:
-    print("Não existe essa tarefa, verifique o número digitado!")
-    return  
+  try:
+    adjust_index = int(index) - 1
+    if adjust_index >= 0 and adjust_index < len(tasks):
+      tasks[adjust_index]["task"] = new_task
+      print(f"Tarefa {index} atualizada para {new_task}")
+    else:
+      print("Não existe essa tarefa, verifique o número digitado!")
+  except ValueError:
+    print("Por favor, digite um número válido para o índice da tarefa.")
 
 def completed_task(tasks, index):
-  adjust_index = int(index) - 1
-  tasks[adjust_index]["completed"] = True
-  print(f"Tarefa {index} marcada como completa!")
-  return
+  try:
+    adjust_index = int(index) - 1
+    if adjust_index >= 0 and adjust_index < len(tasks):
+      tasks[adjust_index]["completed"] = True
+      print(f"Tarefa {index} marcada como completa!")
+    else:
+      print("Não existe essa tarefa, verifique o número digitado!")
+  except ValueError:
+    print("Por favor, digite um número válido para o índice da tarefa.")
 
 def delete_completed_tasks(tasks):
   for task in tasks:
@@ -55,14 +65,20 @@ while True:
   
 	elif choice == "3":
 		view_task(tasks)
-		index = input("Digite o número da tarefa que deseja atualizar: ")
-		new_task = input("Digite a nova descrição da tarefa: ")
-		update_task(tasks, index, new_task)
+		if tasks:
+			index = input("Digite o número da tarefa que deseja atualizar: ")
+			new_task = input("Digite a nova descrição da tarefa: ")
+			update_task(tasks, index, new_task)
+		else:
+			print("Não há tarefas para atualizar.")
   
 	elif choice == "4":
 		view_task(tasks)
-		index = input("Digite o número da tarefa que deseja completar: ")
-		completed_task(tasks,index)
+		if tasks:
+			index = input("Digite o número da tarefa que deseja completar: ")
+			completed_task(tasks,index)
+		else:
+			print("Não há tarefas para completar.")
   
 	elif choice == "5":
 		delete_completed_tasks(tasks)
